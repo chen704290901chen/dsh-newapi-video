@@ -1,0 +1,67 @@
+{
+  "name": "dsh-newapi-video",
+  "version": "1.0.0",
+  "description": "Call a new-api (one-api style) relay station's video model from the conversation, with @-referenced image/video materials plus a prompt.",
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./client": {
+      "default": "./lib/client.js"
+    },
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib/index.js",
+    "lib/index.d.ts",
+    "lib/client.js",
+    "cordis.patch.yml",
+    "README.md",
+    "skill"
+  ],
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "dsh-plugin",
+    "cordis",
+    "new-api",
+    "newapi",
+    "one-api",
+    "text-to-video",
+    "image-to-video",
+    "video-generation"
+  ],
+  "license": "MIT",
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-runtime",
+        "@deepseek-ai/dsh-client-ui-settings"
+      ]
+    }
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "^4.0.1",
+    "@deepseek-ai/dsh-tools": ">=0.1.1-rc.2 <0.1.2-0 || >=0.1.2-rc.1 <0.2.0-0",
+    "@deepseek-ai/dsh-settings": ">=0.1.1-rc.2 <0.1.2-0 || >=0.1.2-rc.1 <0.2.0-0",
+    "@deepseek-ai/dsh-system-prompt": ">=0.1.1-rc.2 <0.1.2-0 || >=0.1.2-rc.1 <0.2.0-0",
+    "@deepseek-ai/schemastery": "^3.18.1"
+  },
+  "peerDependenciesMeta": {
+    "@deepseek-ai/dsh-system-prompt": {
+      "optional": true
+    },
+    "@deepseek-ai/dsh-settings": {
+      "optional": true
+    }
+  }
+}

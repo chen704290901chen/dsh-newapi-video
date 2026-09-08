@@ -1,0 +1,5 @@
+# Build artifacts
+*.tgz
+
+# Internal dev docs (contains local machine paths, not for public repo)
+AGENTS.md

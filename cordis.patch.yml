@@ -1,0 +1,30 @@
+# dsh-newapi-video bundle patch.
+#
+# One row registers the Node host plugin. The plugin registers the
+# `newapi_generate_video` and `newapi_task_status` tools plus a system-prompt
+# guidance section, and exposes a `newapi-video` settings namespace in the
+# WebUI Settings page.
+#
+# Override any config field here (or in the profile's cordis.patch.yml) by id:
+#   - id: newapi-video
+#     name: dsh-newapi-video
+#     config:
+#       baseURL: https://your-relay.example.com/v1
+#       model: kling-v1
+- insert:
+    - id: newapi-video
+      name: dsh-newapi-video
+      config:
+        enabled: true
+        mode: v1-videos
+        baseURL: ""
+        apiKey: ""
+        model: doubao-seedance-2-0-mini-260615
+        outputDir: newapi_output
+        timeoutMs: 120000
+        pollIntervalMs: 5000
+        maxPollAttempts: 360
+        aspectRatio: "16:9"
+        durationSeconds: 5
+        submitPath: /videos/generations
+        statusPathTemplate: /videos/{task_id}
