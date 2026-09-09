@@ -1,6 +1,6 @@
 {
   "name": "dsh-newapi-video",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Call a new-api (one-api style) relay station's video model from the conversation, with @-referenced image/video materials plus a prompt.",
   "type": "module",
   "main": "lib/index.js",
