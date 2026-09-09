@@ -23,44 +23,18 @@
 
 ## 安装
 
-插件源码位于 `dsh-newapi-video/`，打包产物为 `dsh-newapi-video-1.0.0.tgz`。
+### 方式一：插件市场（推荐）
 
-### 方式一：用 dsh CLI 安装到 web profile
+插件已收录到 [awesome-dsh-plugin](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin)，在 DSH 里打开 **设置 → 插件市场**，搜索 `dsh-newapi-video` 一键安装。
+
+### 方式二：从源码构建
 
 ```powershell
-dsh plugin --profile web add file:C:\Users\Administrator\.qurwork-desktop-dsh\QurWork\dsh-newapi-video
+git clone https://github.com/chen704290901chen/dsh-newapi-video.git
+cd dsh-newapi-video
+npm pack
+dsh plugin --profile web add file:./dsh-newapi-video-1.0.0.tgz
 ```
-
-### 方式二：手动安装
-
-1. 把 `dsh-newapi-video-1.0.0.tgz` 拷贝到 profile 目录：
-   ```powershell
-   Copy-Item dsh-newapi-video-1.0.0.tgz "C:\Users\Administrator\.qurwork-desktop-dsh\.dsh\profiles\web\"
-   ```
-2. 编辑 `C:\Users\Administrator\.qurwork-desktop-dsh\.dsh\profiles\web\package.json`：
-   ```json
-   "dependencies": {
-     "dsh-newapi-video": "file:dsh-newapi-video-1.0.0.tgz"
-   },
-   "dsh": {
-     "profile": {
-       "bundles": [
-         "@deepseek-ai/dsh-base",
-         "@deepseek-ai/dsh-web-app",
-         "qurwork-dsh-bridge",
-         "dshmarket",
-         "dsh-request-inspector",
-         "dsh-newapi-video"
-       ]
-     }
-   }
-   ```
-3. 安装依赖（在 profile 目录）：
-   ```powershell
-   Set-Location "C:\Users\Administrator\.qurwork-desktop-dsh\.dsh\profiles\web"
-   pnpm install
-   ```
-4. 重启 DSH Web 应用，使主机插件生效。
 
 ## 配置（WebUI Settings → NewAPI Video）
 
