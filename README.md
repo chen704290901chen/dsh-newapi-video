@@ -42,8 +42,8 @@ dsh plugin --profile web add file:./dsh-newapi-video-1.0.0.tgz
 |---|---|---|
 | `enabled` | `true` | 是否注册工具。由输入栏「视频创作」开关驱动：关闭时从 agent 工具列表**彻底移除**生成工具（agent 感知不到插件），同时隐藏上传/预览/资产库 UI。 |
 | `mode` | `v1-videos` | 中转协议：`v1-videos`（默认，适配 Seedance/Happyhorse）/ `openai-videos` / `modelverse-tasks` / `generic-rest`。 |
-| `baseURL` | 空 | 中转站 Base URL（含 `/v1`）。**留空则默认读取 DSH「模型配置」里的 baseURL**。 |
-| `apiKey` | 空 | 中转站 API Key。**留空则用「模型配置」里的 key**；不再支持环境变量回退。 |
+| `baseURL` | 空 | 中转站 Base URL，**带或不带** `/v1` 都可以（插件会自己拼 `/v1/videos` 等，不会变成 `/v1/v1`）。**留空则默认读取 DSH「模型配置」里的 baseURL**。 |
+| `apiKey` | 空 | 中转站 API Key。手动填过的会在设置页**打码**显示，并标明「本插件手动填写」还是「模型配置」回退。**留空则用「模型配置」里的 key**；不再支持环境变量回退。 |
 | `model` | `doubao-seedance-2-0-mini-260615` | 视频模型 id（默认固定 Seedance mini；可切 `happyhorse-1.1-i2v` 等）。 |
 | `imageModel` | `gpt-image-2` | 图片模型 id（默认固定；可切 `qwen-image-2.0`、Seedream 等）。 |
 | `imageSize` | `1024x1024` | 默认图片尺寸（OpenAI 式 `1024x1024`，或 qwen 式 `宽x高`）。 |

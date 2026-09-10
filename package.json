@@ -1,6 +1,6 @@
 {
   "name": "dsh-newapi-video",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Call a new-api (one-api style) relay station's video model from the conversation, with @-referenced image/video materials plus a prompt.",
   "type": "module",
   "main": "lib/index.js",
@@ -19,6 +19,7 @@
   "files": [
     "lib/index.js",
     "lib/session-ledger.js",
+    "lib/relay-url.js",
     "lib/index.d.ts",
     "lib/client.js",
     "cordis.patch.yml",
