@@ -18,6 +18,7 @@
   },
   "files": [
     "lib/index.js",
+    "lib/session-ledger.js",
     "lib/index.d.ts",
     "lib/client.js",
     "cordis.patch.yml",
