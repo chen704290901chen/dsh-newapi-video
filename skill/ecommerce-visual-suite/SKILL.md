@@ -39,6 +39,18 @@ whenToUse: >-
 
 > **方向门控**：本技能是视频工坊的**默认方向**。调用生成工具前，必须先向用户确认「方向 + 规格」（模型 / 画幅 / 时长 / 张数），**并确认「生成细节基线」（光影 / 运镜 / 细节）**；遵循下方「澄清基线 → 锁定规格(含生成细节确认)」流程；未确认前不要调用 `newapi_generate_image` / `newapi_generate_video`。
 
+## 全能参考图确认（硬顺序 —— 必须遵守）
+
+产品源是一组图 `productRefs[]`：本会话用户附件 `@路径` 的全部图片，不是单张「@产品图」。没有附件时才允许 `newapi_assets`。
+
+1. 超过 3 张（`productRefs.length > 3`）时，先让用户挑最多 3 张，禁止默默丢弃（图改图上限 3）。
+2. 套装或视频开工后，**第一张图必须** `newapi_generate_image(role=turntable, images=productRefs)`。在用户发出「全能参考图已确认」话术之前，禁止 `role=shot` 和 `newapi_generate_video`。
+3. 用户点「重生」或发出重生话术：只再出 `role=turntable`，仍不出套装。
+4. 确认之后按镜头清单批量 `role=shot` + `shot_id`，`images` 仍是同一组 `productRefs`。镜间不向用户逐张确认。
+5. 视频：`reference_images` 只传已确认全能图；快乐马改传 `first_frame` = 该全能图，并带 `shot_id`（如 `Video_01`）。不要用未确认的单张正面图当视频参考。
+6. 用户从画廊点重出 / 改需求 / 在这张上修时，按话术里的 `role` / `shot_id` / 路径调用现有工具，不要新开一轮 turntable。
+7. 禁止复制/重命名/移动/删除生成的媒体文件（现有红线保留）。
+
 ## 画幅与尺寸映射（gpt-image-2）
 
 | 用途 | 比例 | size 参数 |
@@ -91,8 +103,8 @@ whenToUse: >-
 
 ### 第三步：规划套装镜头清单
 
-把**用户附件上传的产品图 `@路径`** 注册为唯一产品资产（优先；只有当用户没有附件 `@引用` 时才用
-`newapi_assets` 从资产库挑一张作为产品资产）。镜头清单固定：
+把 `productRefs[]` 注册为产品源（可多张；后续镜头必须复用同一组路径）。没有附件 `@引用` 时才用
+`newapi_assets` 从资产库挑素材。镜头清单固定：
 
 | 镜头 ID | 类型 | 景别 | 视觉意图 | 引用资产 |
 | --- | --- | --- | --- | --- |
@@ -130,13 +142,13 @@ whenToUse: >-
 卖点文字参数（如「微米级防水」「航空级铝材」）自动转化为高质感视觉意象
 （如「哑光金属边缘悬着透明水珠弧线」「逆光下清晰的合金拉丝纹理」）。
 
-- 单张调用：`newapi_generate_image(prompt=…, image=@产品图, size=1024x1024|1024x1536, quality=hd)`。
+- 单张调用：`newapi_generate_image(prompt=…, images=productRefs, role=shot, shot_id=镜头ID, size=1024x1024|1024x1536, quality=hd)`。
 - 单图提示词总长控制在 120-200 词以内，核心卖点与继承声明放句首。
 - **失败处理**：单镜生成后先核对五要素（焦点、主体占比、朝向、材质、LOGO）；任一不符优先
   定向编辑修复（再次 `newapi_generate_image` 带 `image` 指向刚生成的图 + 编辑指令 prompt）；
   编辑不可行再重生成该镜，且只改问题参数、其余提示词逐字不动，避免连带漂移。
 
-**提示词模板**（`<<<{产品资产}>>>` 用 @产品图路径）：
+**提示词模板**（`<<<{产品资产}>>>` 用 productRefs 路径，调用时 `images=productRefs`）：
 
 - 主图场景氛围（1:1）：`<<<@产品图>>> 继承产品的精确工业形态、比例、表面处理与 LOGO 位置。
   低角度 15-25 度黄金分割构图，产品位于视觉中心，场景为{品牌调性}高级氛围环境；主体色约占画面 90%，
@@ -173,11 +185,11 @@ whenToUse: >-
 > **⚠️ 全视角参考图（避免「货不对版」，最重要）**：视频动起来会暴露产品的侧面/背面/顶面。**只给一张
 > 正面图，AI 很容易「货不对版」**（背面/侧面凭空捏造、比例/结构/朝向对不上）。生成前先有一张**多视角合成图**：
 > - **把各视角合成到一张图**：以你附件上传的产品图为基底，用 `newapi_generate_image` 做 image-to-image
->   （`image=@产品图`），**生成一张多视角合成图**——把 **正面 / 侧面 / 背面 / 顶部 / 细节特写 都放进同一张画布**
+>   （`images=productRefs`），**生成一张多视角合成图**——把 **正面 / 侧面 / 背面 / 顶部 / 细节特写 都放进同一张画布**
 >   （类似 360° 产品展示图上/下/左/右多排版、多视图 turntable 一张图），每个子视图都**继承产品的形态、比例、
 >   表面处理与 LOGO 位置**。**一张搞定，不要拆成多张。**
 > - 这张多视角合成图就作为**唯一的外观参考**：传给视频模型锁外观一致性。**不要用单张正面图硬生成视频**。
-> - 生成视频前，**先把这张多视角合成图确认给用户**（避免货不对版），必要时先让用户复核是否忠实产品，再进视频。
+> - 必须等对话里出现「全能参考图已确认」话术后再调用视频工具；`reference_images`（快乐马：`first_frame`）= 已确认全能图，并传 `shot_id=Video_01`。
 > - 用 **Seedance `doubao-seedance-*`**：把这张多视角合成图传给 `reference_images`(1 张) 锁外观；若要首帧用正面
 >   特写，可另给 `first_frame`（若同时传了 `reference_images`，首/尾帧会被自动忽略，以 `reference_images` 为准）。
 > - 用 **快乐马 `happyhorse-*`**：**只收 1 张图**，直接把这**多视角合成图**作为 `first_frame` 即可（正好一张）。
@@ -189,8 +201,8 @@ whenToUse: >-
 | 详情/节奏 | 卖点意象水珠/拉丝特写 1-2 秒;结尾定格 0.5s;景深由浅到深 |
 | 规格 | 模型 `doubao-seedance-2-0-mini-260615`、`duration`、`resolution`(720p/1080p)、`aspect_ratio`(9:16/16:9/1:1) |
 
-确认后调用：`newapi_generate_video(prompt=产品宣传短片描述, first_frame=@产品图, duration=5,
-resolution=720p, model=doubao-seedance-2-0-mini-260615, aspect_ratio=9:16|16:9)`。
+确认后调用：`newapi_generate_video(prompt=产品宣传短片描述, reference_images=[已确认全能图], duration=5,
+resolution=720p, model=doubao-seedance-2-0-mini-260615, aspect_ratio=9:16|16:9, role=shot, shot_id=Video_01)`。快乐马改传 `first_frame` = 已确认全能图。
 运镜、灯光与主图风格保持一致。
 - 默认视频模型 `doubao-seedance-2-0-mini-260615`（支持 `aspect_ratio`/`reference_images`/`last_frame`）。
 - 若要 **快乐马 `happyhorse-1.1-i2v`**：只传 `first_frame`(单图)+`prompt`+`duration`+`resolution`(仅720/1080p)，**不要传 `aspect_ratio`**（会被忽略）。

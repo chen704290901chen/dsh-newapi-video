@@ -1,7 +1,7 @@
 {
   "name": "dsh-newapi-video",
   "name_cn": "NewAPI 视频生成",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "DSH 视频创作插件：通过 new-api（one-api 风格中转站）调用文生视频、图生视频、首尾帧与参考素材视频模型，并提供任务查询、素材库和生成设置。",
   "sketch": "连接 NewAPI 视频模型的文生视频、图生视频与素材管理插件。",
   "avatar": "",
