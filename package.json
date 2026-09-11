@@ -18,6 +18,7 @@
   },
   "files": [
     "lib/index.js",
+    "lib/content-disposition.js",
     "lib/session-ledger.js",
     "lib/relay-url.js",
     "lib/index.d.ts",
@@ -47,7 +48,8 @@
       "platform": "web",
       "inject": [
         "@deepseek-ai/dsh-client-runtime",
-        "@deepseek-ai/dsh-client-ui-settings"
+        "@deepseek-ai/dsh-client-ui-settings",
+        "@deepseek-ai/dsh-client-ui-primitives"
       ]
     }
   },
