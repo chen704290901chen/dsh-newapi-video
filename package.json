@@ -38,6 +38,10 @@
     "image-to-video",
     "video-generation"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chen704290901chen/dsh-newapi-video.git"
+  },
   "license": "MIT",
   "dsh": {
     "bundle": {
